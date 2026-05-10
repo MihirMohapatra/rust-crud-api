@@ -1,2 +1,0 @@
--- This file was automatically created by Diesel to setup helper functions
--- and other internal bookkeeping.
