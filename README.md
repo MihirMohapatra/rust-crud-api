@@ -65,6 +65,54 @@ cargo run
 
 The API listens on `http://127.0.0.1:8080` by default.
 
+## Running With Docker
+
+The easiest way to run the full stack is Docker Compose. It starts PostgreSQL,
+builds the Rust API image, runs Diesel migrations, and exposes the API on port
+`8080`.
+
+```sh
+docker compose up --build
+```
+
+After the containers are running, check the API:
+
+```sh
+curl http://127.0.0.1:8080/health
+```
+
+Create a user:
+
+```sh
+curl -X POST http://127.0.0.1:8080/users \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Ada Lovelace\",\"email\":\"ada@example.com\"}"
+```
+
+Stop the containers:
+
+```sh
+docker compose down
+```
+
+Stop the containers and delete the PostgreSQL volume:
+
+```sh
+docker compose down -v
+```
+
+To run only the application image against an existing database, build and run it
+with a `DATABASE_URL`:
+
+```sh
+docker build -t rust-crud-api .
+docker run --rm -p 8080:8080 \
+  -e DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/my_crud_app \
+  -e HOST=0.0.0.0 \
+  -e PORT=8080 \
+  rust-crud-api
+```
+
 ## Endpoints
 
 - `POST /users` creates a user.
